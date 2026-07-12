@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #f4f5f1;
+  --color-sheet: #ffffff;
+  --color-ink: #14231c;
+  --color-ink-soft: #4b5c53;
+  --color-ink-mute: #7a8880;
+  --color-pine: #1a5c3d;
+  --color-pine-deep: #103d28;
+  --color-pine-tint: #e6f0ea;
+  --color-leaf: #2f9e6b;
+  --color-stamp: #b23c2a;
+  --color-rule: #d6ddd5;
+  --color-rule-soft: #e8ede7;
+  --color-gold: #b98a2f;
+  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-urdu: "Noto Nastaliq Urdu", "Jameel Noori Nastaleeq", serif;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-feature-settings: "tnum", "ss01";
+  line-height: 1.55;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* Urdu — flip direction and swap font locally */
+[lang="ur"], .urdu {
+  font-family: var(--font-urdu);
+  direction: rtl;
+  line-height: 2;
+}
+
+.display { font-family: var(--font-display); letter-spacing: -0.02em; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* Signature: the ink stamp */
+.stamp {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.28rem 0.7rem;
+  border: 1.5px solid currentColor;
+  border-radius: 3px;
+  display: inline-block;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.stamp-accepted { color: var(--color-pine); background: color-mix(in srgb, var(--color-leaf) 12%, transparent); }
+.stamp-draft { color: var(--color-ink-soft); background: color-mix(in srgb, var(--color-ink-soft) 8%, transparent); }
+.stamp-rejected { color: var(--color-stamp); background: color-mix(in srgb, var(--color-stamp) 10%, transparent); }
+.stamp-tilt { transform: rotate(-6deg); }
+
+/* Ledger table */
+.ledger tr { border-bottom: 1px solid var(--color-rule); }
+.ledger tr:last-child { border-bottom: none; }
+.ledger th {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-ink-soft);
+  font-weight: 500;
+  text-align: left;
+  padding: 0.85rem 1rem;
+  background: var(--color-rule-soft);
+}
+.ledger td { padding: 0.95rem 1rem; font-size: 0.95rem; vertical-align: middle; }
+
+.field {
+  width: 100%;
+  background: var(--color-sheet);
+  border: 1px solid var(--color-rule);
+  border-radius: 6px;
+  padding: 0.7rem 0.85rem;
+  font-size: 0.975rem;
+  color: var(--color-ink);
+  transition: border-color 120ms, box-shadow 120ms;
+}
+.field:focus {
+  outline: none;
+  border-color: var(--color-pine);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-pine) 18%, transparent);
+}
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--color-ink-soft);
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center;
+  border-radius: 6px; padding: 0.7rem 1.25rem; font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; border: 1px solid transparent; transition: background 120ms ease, color 120ms;
+  min-height: 42px;
+}
+.btn:focus-visible { outline: 2px solid var(--color-pine); outline-offset: 2px; }
+.btn-primary { background: var(--color-pine); color: #fff; }
+.btn-primary:hover { background: var(--color-pine-deep); }
+.btn-ghost { background: var(--color-sheet); color: var(--color-pine); border-color: var(--color-rule); }
+.btn-ghost:hover { background: var(--color-pine-tint); border-color: var(--color-pine); }
+.btn-danger { background: var(--color-sheet); color: var(--color-stamp); border-color: var(--color-rule); }
+.btn-danger:hover { background: color-mix(in srgb, var(--color-stamp) 8%, transparent); border-color: var(--color-stamp); }
+.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+.card { background: var(--color-sheet); border: 1px solid var(--color-rule); border-radius: 10px; }
+
+/* Sidebar */
+.side-link {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: var(--color-ink-soft);
+  font-weight: 500;
+  transition: background 120ms, color 120ms;
+  white-space: nowrap;
+  border-left: 3px solid transparent;
+  margin-left: -3px;
+}
+.side-link:hover { background: var(--color-pine-tint); color: var(--color-pine-deep); }
+.side-link[aria-current="page"] {
+  background: var(--color-pine);
+  color: #fff;
+  font-weight: 600;
+  border-left-color: var(--color-gold);
+}
+.side-link[aria-current="page"]:hover { background: var(--color-pine-deep); color: #fff; }
+.side-icon { flex-shrink: 0; width: 1.15rem; height: 1.15rem; }
+
+/* Print — strip app chrome, show only the invoice sheet */
+@media print {
+  aside, .client-subnav, .no-print { display: none !important; }
+  main { padding: 0 !important; max-width: none !important; }
+  body { background: #fff; }
+  #invoice-sheet { border: none !important; box-shadow: none !important; }
+}
+
+/* Kicker label (page titles, small caps) */
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-pine);
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+}
