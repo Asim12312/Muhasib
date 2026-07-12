@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ErrorNote } from "@/components/ui";
+import { Button } from "@/components/Button";
+import { PralGuide } from "@/components/PralGuide";
 
 const provinces = ["Punjab", "Sindh", "Khyber Pakhtunkhwa", "Balochistan", "Islamabad Capital Territory", "Gilgit-Baltistan", "AJK"];
 const STATUSES: [string, string][] = [["onboarding", "Onboarding"], ["active", "Active"], ["pending_docs", "Pending docs"], ["at_risk", "At risk"], ["dormant", "Dormant"]];
@@ -76,8 +78,12 @@ export default function ClientSettings() {
         <div>
           <label className="label">PRAL API bearer token</label>
           <input className="field mono" type="password" value={g("fbrToken")} placeholder="Required for live mode" onChange={(e) => set({ fbrToken: e.target.value })} />
-          <p className="text-xs text-[color:var(--color-ink-soft)] mt-2">Stored against this client. Endpoint URL is set by your admin (PRAL_API_URL).</p>
+          <p className="text-xs text-[color:var(--color-ink-soft)] mt-2">Stored against this client. The API endpoint URL is set once for the whole firm under Firm settings.</p>
         </div>
+        {g("fbrMode") === "pral" && !g("fbrToken") && (
+          <div className="sm:col-span-2 text-sm text-[color:var(--color-stamp)]">⚠️ Live mode selected but no bearer token set — transmissions will fail until you paste this client&apos;s PRAL token above.</div>
+        )}
+        <div className="sm:col-span-2"><PralGuide /></div>
       </div>
 
       {isPrincipal && (
@@ -96,10 +102,10 @@ export default function ClientSettings() {
         </div>
       )}
 
-      <div className="mt-5 flex items-center gap-4">
-        <button className="btn btn-primary" onClick={save}>Save changes</button>
+      <div className="mt-5 flex flex-wrap items-center gap-4">
+        <Button onClick={save}>Save changes</Button>
         {saved && <span className="stamp stamp-accepted">Saved</span>}
-        <button className="btn btn-danger ml-auto" onClick={del}>Delete client</button>
+        <Button variant="danger" className="ml-auto" onClick={del}>Delete client</Button>
       </div>
       <div className="mt-3"><ErrorNote msg={error} /></div>
     </div>

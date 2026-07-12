@@ -11,10 +11,13 @@ const UserSchema = new Schema(
   {
     firmId: { type: Schema.Types.ObjectId, ref: "Firm", required: true, index: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-    passwordHash: { type: String, required: true },
+    passwordHash: { type: String, default: "" }, // empty for Google-only accounts
     name: { type: String, required: true },
     role: { type: String, enum: ["principal", "manager", "associate"], default: "associate" },
     status: { type: String, enum: ["active", "disabled"], default: "active" },
+    emailVerified: { type: Boolean, default: false },
+    authProvider: { type: String, enum: ["password", "google"], default: "password" },
+    googleId: { type: String, default: "" },
   },
   { timestamps: true }
 );

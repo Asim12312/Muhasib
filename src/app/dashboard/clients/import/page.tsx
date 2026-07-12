@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Papa from "papaparse";
 import { PageTitle, ErrorNote } from "@/components/ui";
+import { Button } from "@/components/Button";
 
 const REQUIRED = ["businessName"];
 const TEMPLATE =
@@ -14,7 +15,6 @@ export default function ClientImportPage() {
   const [fileName, setFileName] = useState("");
   const [error, setError] = useState("");
   const [done, setDone] = useState("");
-  const [busy, setBusy] = useState(false);
 
   function onFile(file: File) {
     setError(""); setDone(""); setFileName(file.name);
@@ -31,10 +31,9 @@ export default function ClientImportPage() {
   }
 
   async function run() {
-    setBusy(true); setError(""); setDone("");
+    setError(""); setDone("");
     const res = await fetch("/api/clients/import", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ rows }) });
     const data = await res.json();
-    setBusy(false);
     if (res.ok) { setDone(`Onboarded ${data.created} client(s). Compliance calendars generated automatically.`); setRows([]); setFileName(""); }
     else setError(data.error || "Import failed.");
   }
@@ -58,7 +57,7 @@ export default function ClientImportPage() {
         {fileName && rows.length > 0 && <p className="text-sm"><span className="mono">{fileName}</span> — {rows.length} client(s) detected.</p>}
         <ErrorNote msg={error} />
         {done && <p className="text-sm text-[color:var(--color-pine)] font-medium">{done}</p>}
-        <button className="btn btn-primary" onClick={run} disabled={busy || rows.length === 0}>{busy ? "Importing…" : "Import clients"}</button>
+        <Button onClick={run} disabled={rows.length === 0} loadingText="Importing…">Import clients</Button>
       </div>
     </div>
   );

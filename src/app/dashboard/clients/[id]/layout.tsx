@@ -35,7 +35,7 @@ export default function ClientWorkspaceLayout({ children }: { children: React.Re
   return (
     <div>
       {/* Sticky current-client indicator — prevents filing for the wrong client */}
-      <div className="client-subnav sticky top-0 z-20 -mx-6 md:-mx-10 px-6 md:px-10 py-3 bg-[color:var(--color-sheet)] border-b border-[color:var(--color-rule)] mb-6">
+      <div className="client-subnav sticky top-14 md:top-0 z-20 -mx-4 sm:-mx-6 md:-mx-10 px-4 sm:px-6 md:px-10 py-3 bg-[color:var(--color-sheet)] border-b border-[color:var(--color-rule)] mb-6">
         <div className="flex items-center flex-wrap gap-x-4 gap-y-2 justify-between">
           <div className="flex items-center gap-3 min-w-0">
             <Link href="/dashboard/clients" className="mono text-xs text-[color:var(--color-ink-soft)] hover:text-[color:var(--color-pine)]">← Clients</Link>

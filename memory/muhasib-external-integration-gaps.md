@@ -1,17 +1,19 @@
 ---
 name: muhasib-external-integration-gaps
-description: Muhasib Position 1 modules that are functional in-app but still need external providers to be production-real
+description: Muhasib external integrations — what's wired and which env keys the user must supply to activate each
 metadata:
   type: project
 ---
 
-Muhasib's Position 1 build (see [[muhasib-position1-architecture]]) is functionally complete in-app but these pieces use pragmatic MVP stand-ins pending external services:
+Muhasib (see [[muhasib-position1-architecture]]) has these integrations wired in code; each degrades gracefully to a dev fallback until its env keys are provided:
 
-- **Staff invites**: generate a shareable `/invite/<token>` link shown in the Staff UI to copy manually. No email is actually sent (no email provider wired).
-- **Deadline reminders**: deadlines are generated + surfaced in the dashboard/calendar, but no email/WhatsApp dispatch — needs a provider (WhatsApp is what users actually check in PK).
-- **Billing**: plan tiers + client-limit enforcement + tier-switch UI are real, but there is NO payment gateway. RAAST/card is "arranged with our team"; switching tier just updates the limit.
-- **Document vault**: files stored inline as Buffer in MongoDB (8MB cap, `select:false`). Move to S3/GridFS before real volume.
-- **FBR PRAL adapter** (`src/lib/fbr/pral.ts`): follows the published DI payload shape but field names must be verified against the current PRAL spec; only the sandbox mock is exercised.
-- **OTP login**: not implemented — email+password only.
+- **Email (Resend)** — `src/lib/email.ts`. Needs `RESEND_API_KEY` + `EMAIL_FROM` (+ `APP_URL` for link base). Without them, emails are logged to server console. Powers: email verification, password reset, staff invites.
+- **Email verification** — soft gate: user logs in but sees a banner ([[VerifyBanner]]) and FBR transmit is blocked server-side (submit route returns 403) until `emailVerified`. Token model: `AuthToken` (type verify/reset).
+- **Password reset** — `/forgot` + `/reset` pages, `/api/auth/forgot` + `/api/auth/reset`.
+- **reCAPTCHA v2 checkbox** — `src/lib/recaptcha.ts` + `Recaptcha` component. Needs `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` + `RECAPTCHA_SECRET_KEY`. Skipped when unset. On login/register/forgot.
+- **Google OAuth** — `/api/auth/google` + callback. Needs `NEXT_PUBLIC_GOOGLE_CLIENT_ID` + `GOOGLE_CLIENT_SECRET`. First Google login auto-creates a firm (principal). Button hidden when unset. Redirect URI: `{APP_URL}/api/auth/google/callback`.
+- **PRAL API** — endpoint URL now firm-configurable in Firm settings (`Firm.pralApiUrl`), overriding `PRAL_API_URL` env; per-client bearer token stays on each Client. `PralGuide` component gives in-app acquisition steps. Still only the sandbox mock is exercised; verify PRAL payload field names against the live spec before production.
 
-Also not yet done: landing page pricing copy still shows the old per-invoice tiers, not the new per-client firm plans.
+Still real MVP stand-ins: billing has no payment gateway (tier switch just updates the client limit); deadline reminders are shown but not dispatched; documents stored inline in Mongo (8MB cap).
+
+PWA: manifest + `public/sw.js` + install button ([[InstallPwaButton]]); SW registers only in production build.

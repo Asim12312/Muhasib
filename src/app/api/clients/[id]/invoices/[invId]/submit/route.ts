@@ -3,6 +3,7 @@ import { dbConnect } from "@/lib/db";
 import { Invoice } from "@/models/Invoice";
 import { Buyer } from "@/models/Buyer";
 import { Client } from "@/models/Client";
+import { Firm } from "@/models/Firm";
 import { getSession, clientScope, logAudit } from "@/lib/access";
 import { getFbrAdapter } from "@/lib/fbr";
 import { friendlyFbrError } from "@/lib/fbr/errors";
@@ -14,6 +15,8 @@ const EDIT_WINDOW_MS = 72 * 60 * 60 * 1000;
 export async function POST(_req: NextRequest, ctx: { params: Promise<{ id: string; invId: string }> }) {
   const s = await getSession();
   if (!s) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+  if (!s.emailVerified)
+    return NextResponse.json({ error: "Verify your email before transmitting invoices to FBR. Check your inbox or resend from the banner." }, { status: 403 });
   const { id, invId } = await ctx.params;
   await dbConnect();
 
@@ -32,7 +35,8 @@ export async function POST(_req: NextRequest, ctx: { params: Promise<{ id: strin
       { status: 400 }
     );
 
-  const adapter = getFbrAdapter({ fbrMode: client.fbrMode, fbrToken: client.fbrToken });
+  const firm = client.fbrMode === "pral" ? await Firm.findById(s.firmId).select("pralApiUrl") : null;
+  const adapter = getFbrAdapter({ fbrMode: client.fbrMode, fbrToken: client.fbrToken, pralApiUrl: firm?.pralApiUrl });
   const result = await adapter.submitInvoice({
     invoiceRef: invoice.invoiceRef,
     invoiceDate: invoice.invoiceDate,

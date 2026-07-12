@@ -10,8 +10,8 @@ export async function GET() {
   await dbConnect();
   const firm = await Firm.findById(s.firmId);
   return NextResponse.json({
-    user: { id: s.userId, name: s.name, email: s.email, role: s.role },
-    firm: firm ? { id: firm._id, name: firm.name, plan: firm.plan, billingEmail: firm.billingEmail, phone: firm.phone } : null,
+    user: { id: s.userId, name: s.name, email: s.email, role: s.role, emailVerified: s.emailVerified },
+    firm: firm ? { id: firm._id, name: firm.name, plan: firm.plan, billingEmail: firm.billingEmail, phone: firm.phone, pralApiUrl: firm.pralApiUrl || "" } : null,
   });
 }
 

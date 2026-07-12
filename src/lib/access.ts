@@ -11,6 +11,7 @@ export interface Session {
   role: Role;
   name: string;
   email: string;
+  emailVerified: boolean;
 }
 
 /** Resolve the signed-in staff member from the session cookie (DB-backed). */
@@ -18,7 +19,7 @@ export async function getSession(): Promise<Session | null> {
   const userId = await getUserId();
   if (!userId) return null;
   await dbConnect();
-  const user = await User.findById(userId).select("firmId role name email status");
+  const user = await User.findById(userId).select("firmId role name email status emailVerified");
   if (!user || user.status === "disabled") return null;
   return {
     userId: user._id.toString(),
@@ -26,6 +27,7 @@ export async function getSession(): Promise<Session | null> {
     role: user.role as Role,
     name: user.name,
     email: user.email,
+    emailVerified: !!user.emailVerified,
   };
 }
 

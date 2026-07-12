@@ -15,7 +15,7 @@ export async function GET() {
   ]);
   if (!firm) return NextResponse.json({ error: "Firm not found." }, { status: 404 });
   return NextResponse.json({
-    firm: { id: firm._id, name: firm.name, billingEmail: firm.billingEmail, phone: firm.phone, plan: firm.plan },
+    firm: { id: firm._id, name: firm.name, billingEmail: firm.billingEmail, phone: firm.phone, plan: firm.plan, pralApiUrl: firm.pralApiUrl || "" },
     usage: { clients: clientCount, clientLimit: clientLimitFor(firm.plan?.tier) },
     plans: PLANS,
   });
@@ -33,6 +33,7 @@ export async function PATCH(req: NextRequest) {
   if (typeof body.name === "string" && body.name.trim()) firm.name = body.name.trim();
   if (typeof body.billingEmail === "string") firm.billingEmail = body.billingEmail;
   if (typeof body.phone === "string") firm.phone = body.phone;
+  if (typeof body.pralApiUrl === "string") firm.pralApiUrl = body.pralApiUrl.trim();
 
   if (body.tier && ["trial", "starter", "growth", "scale"].includes(body.tier)) {
     if (!can(s.role, "manage_billing"))

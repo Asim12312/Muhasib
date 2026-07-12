@@ -14,13 +14,13 @@ export function ErrorNote({ msg }: { msg: string }) {
 
 export function PageTitle({ kicker, title, sub, action }: { kicker: string; title: string; sub?: string; action?: React.ReactNode }) {
   return (
-    <header className="mb-8 flex items-start justify-between gap-4">
-      <div>
+    <header className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+      <div className="min-w-0">
         <p className="kicker">{kicker}</p>
-        <h1 className="display text-3xl font-bold text-[color:var(--color-ink)]">{title}</h1>
-        {sub ? <p className="text-[color:var(--color-ink-soft)] mt-2 max-w-2xl text-base">{sub}</p> : null}
+        <h1 className="display text-2xl sm:text-3xl font-bold text-[color:var(--color-ink)] break-words">{title}</h1>
+        {sub ? <p className="text-[color:var(--color-ink-soft)] mt-2 max-w-2xl text-sm sm:text-base">{sub}</p> : null}
       </div>
-      {action ? <div className="shrink-0">{action}</div> : null}
+      {action ? <div className="sm:shrink-0">{action}</div> : null}
     </header>
   );
 }

@@ -3,7 +3,9 @@ import { randomBytes } from "crypto";
 import { dbConnect } from "@/lib/db";
 import { User } from "@/models/User";
 import { Invite } from "@/models/Invite";
+import { Firm } from "@/models/Firm";
 import { getSession, can, logAudit } from "@/lib/access";
+import { sendEmail, templates, appUrl } from "@/lib/email";
 
 export async function GET() {
   const s = await getSession();
@@ -40,6 +42,9 @@ export async function POST(req: NextRequest) {
     invitedByUserId: s.userId,
     expiresAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
   });
+  const link = `${appUrl(req.nextUrl.origin)}/invite/${token}`;
+  const firm = await Firm.findById(s.firmId).select("name");
+  await sendEmail({ to: String(email).toLowerCase(), subject: `You're invited to ${firm?.name || "a firm"} on Muhasib`, html: templates.invite(firm?.name || "the firm", cleanRole, link) });
   await logAudit(s, "staff.invite", { detail: `${email} as ${cleanRole}` });
   return NextResponse.json({ token, link: `/invite/${token}` }, { status: 201 });
 }

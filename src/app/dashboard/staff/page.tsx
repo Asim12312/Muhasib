@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { PageTitle, ErrorNote, RoleBadge, Empty } from "@/components/ui";
+import { Button } from "@/components/Button";
 
 type Staff = { _id: string; name: string; email: string; role: string; status: string };
 type Invite = { _id: string; email: string; role: string; token: string };
@@ -45,7 +46,7 @@ export default function StaffPage() {
             <option value="associate">Associate</option><option value="manager">Manager</option><option value="principal">Principal</option>
           </select>
         </div>
-        <button className="btn btn-primary" onClick={invite} disabled={!email}>Create invite</button>
+        <Button onClick={invite} disabled={!email} loadingText="Creating…">Create invite</Button>
       </div>
       {inviteLink && (
         <div className="card p-4 mt-3 bg-[color:var(--color-pine-tint)]">

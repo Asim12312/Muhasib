@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Papa from "papaparse";
 import { ErrorNote } from "@/components/ui";
+import { Button } from "@/components/Button";
 
 type Buyer = { _id: string; name: string };
 const REQUIRED = ["invoiceRef", "invoiceDate", "description", "quantity", "rate"];
@@ -21,7 +22,6 @@ export default function ClientInvoiceImport() {
   const [fileName, setFileName] = useState("");
   const [error, setError] = useState("");
   const [done, setDone] = useState("");
-  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     fetch(`/api/clients/${id}/buyers`).then((r) => r.json()).then((d) => {
@@ -44,12 +44,11 @@ export default function ClientInvoiceImport() {
   }
 
   async function run() {
-    setBusy(true); setError(""); setDone("");
+    setError(""); setDone("");
     const res = await fetch(`/api/clients/${id}/invoices/import`, {
       method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ buyerId, rows }),
     });
     const data = await res.json();
-    setBusy(false);
     if (res.ok) { setDone(`Imported ${data.created} draft invoice(s). Review and transmit from the register.`); setRows([]); setFileName(""); }
     else setError(data.error || "Import failed.");
   }
@@ -83,7 +82,7 @@ export default function ClientInvoiceImport() {
           {fileName && rows.length > 0 && <p className="text-sm"><span className="mono">{fileName}</span> — {rows.length} row(s), {new Set(rows.map((r) => r.invoiceRef)).size} invoice(s).</p>}
           <ErrorNote msg={error} />
           {done && <p className="text-sm text-[color:var(--color-pine)] font-medium">{done}</p>}
-          <button className="btn btn-primary" onClick={run} disabled={busy || rows.length === 0 || !buyerId}>{busy ? "Importing…" : "Import as drafts"}</button>
+          <Button onClick={run} disabled={rows.length === 0 || !buyerId} loadingText="Importing…">Import as drafts</Button>
         </div>
       )}
     </div>

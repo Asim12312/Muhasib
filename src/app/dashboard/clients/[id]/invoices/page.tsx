@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Stamp, ErrorNote, Empty } from "@/components/ui";
+import { Button } from "@/components/Button";
 import { Countdown } from "@/components/Countdown";
 
 type Invoice = {
@@ -18,7 +19,6 @@ export default function ClientInvoices() {
   const { id } = useParams();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [error, setError] = useState("");
-  const [busyId, setBusyId] = useState("");
 
   const load = useCallback(() => {
     fetch(`/api/clients/${id}/invoices`).then((r) => r.json()).then((d) => setInvoices(d.invoices || []));
@@ -26,10 +26,9 @@ export default function ClientInvoices() {
   useEffect(() => { load(); }, [load]);
 
   async function transmit(invId: string) {
-    setBusyId(invId); setError("");
+    setError("");
     const res = await fetch(`/api/clients/${id}/invoices/${invId}/submit`, { method: "POST" });
     const data = await res.json();
-    setBusyId("");
     if (!res.ok) setError(data.error || "Transmission failed.");
     load();
   }
@@ -80,12 +79,12 @@ export default function ClientInvoices() {
                   {inv.status === "accepted" ? (
                     <Link href={`/dashboard/clients/${id}/invoices/${inv._id}/print`} className="btn btn-ghost !py-1 !px-3 text-xs">Print / PDF</Link>
                   ) : (
-                    <>
-                      <button className="btn btn-ghost !py-1 !px-3 text-xs mr-2" disabled={busyId === inv._id} onClick={() => transmit(inv._id)}>
-                        {busyId === inv._id ? "Transmitting…" : inv.status === "rejected" ? "Retry" : "Transmit"}
-                      </button>
-                      {inv.status === "draft" && <button className="btn btn-danger !py-1 !px-3 text-xs" onClick={() => remove(inv._id)}>Delete</button>}
-                    </>
+                    <div className="flex justify-end gap-2">
+                      <Button variant="ghost" className="!py-1 !px-3 text-xs" onClick={() => transmit(inv._id)} loadingText="Transmitting…">
+                        {inv.status === "rejected" ? "Retry" : "Transmit"}
+                      </Button>
+                      {inv.status === "draft" && <Button variant="danger" className="!py-1 !px-3 text-xs" onClick={() => remove(inv._id)}>Delete</Button>}
+                    </div>
                   )}
                 </td>
               </tr>

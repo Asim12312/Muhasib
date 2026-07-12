@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PageTitle, ErrorNote } from "@/components/ui";
+import { Button } from "@/components/Button";
 
 const provinces = ["Punjab", "Sindh", "Khyber Pakhtunkhwa", "Balochistan", "Islamabad Capital Territory", "Gilgit-Baltistan", "AJK"];
 
@@ -13,14 +14,12 @@ export default function NewClientPage() {
     contact: { name: "", phone: "", email: "" },
   });
   const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
   const set = (patch: Partial<typeof f>) => setF({ ...f, ...patch });
 
   async function save() {
-    setBusy(true); setError("");
+    setError("");
     const res = await fetch("/api/clients", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(f) });
     const data = await res.json();
-    setBusy(false);
     if (res.ok) router.push(`/dashboard/clients/${data.client._id}`);
     else setError(data.error || "Could not add client.");
   }
@@ -92,7 +91,7 @@ export default function NewClientPage() {
       </div>
 
       <div className="mt-5 flex items-center gap-4">
-        <button className="btn btn-primary" onClick={save} disabled={busy || !f.businessName}>{busy ? "Saving…" : "Add client"}</button>
+        <Button onClick={save} disabled={!f.businessName} loadingText="Saving…">Add client</Button>
         <ErrorNote msg={error} />
       </div>
     </div>

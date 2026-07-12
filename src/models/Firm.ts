@@ -10,6 +10,8 @@ const FirmSchema = new Schema(
     principalUserId: { type: Schema.Types.ObjectId, ref: "User" },
     billingEmail: { type: String, default: "" },
     phone: { type: String, default: "" },
+    // Optional firm-level PRAL Digital Invoicing API endpoint (overrides env).
+    pralApiUrl: { type: String, default: "" },
     plan: {
       tier: { type: String, enum: ["trial", "starter", "growth", "scale"], default: "trial" },
       status: { type: String, enum: ["active", "past_due", "cancelled"], default: "active" },

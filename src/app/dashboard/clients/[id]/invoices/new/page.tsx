@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ErrorNote } from "@/components/ui";
+import { Button } from "@/components/Button";
 
 type Buyer = { _id: string; name: string };
 type Row = { hsCode: string; description: string; quantity: string; uom: string; rate: string; taxRate: string };
@@ -17,7 +18,6 @@ export default function NewInvoice() {
   const [invoiceDate, setInvoiceDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [rows, setRows] = useState<Row[]>([emptyRow()]);
   const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     fetch(`/api/clients/${id}/buyers`).then((r) => r.json()).then((d) => {
@@ -37,15 +37,20 @@ export default function NewInvoice() {
 
   const setRow = (i: number, patch: Partial<Row>) => setRows((rs) => rs.map((r, j) => (j === i ? { ...r, ...patch } : r)));
 
-  async function save() {
-    setBusy(true); setError("");
+  async function save(transmit: boolean) {
+    setError("");
     const res = await fetch(`/api/clients/${id}/invoices`, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ buyerId, invoiceRef, invoiceDate, items: rows }),
     });
-    setBusy(false);
-    if (res.ok) router.push(`/dashboard/clients/${id}/invoices`);
-    else setError((await res.json()).error || "Could not save invoice.");
+    const data = await res.json();
+    if (!res.ok) { setError(data.error || "Could not save invoice."); return; }
+    if (transmit) {
+      const sres = await fetch(`/api/clients/${id}/invoices/${data.invoice._id}/submit`, { method: "POST" });
+      const sdata = await sres.json();
+      if (!sres.ok) { setError(sdata.error || "Saved as draft, but FBR transmission failed. Retry from the register."); router.push(`/dashboard/clients/${id}/invoices`); return; }
+    }
+    router.push(`/dashboard/clients/${id}/invoices`);
   }
 
   return (
@@ -106,9 +111,10 @@ export default function NewInvoice() {
               <span>Sales tax: <strong>{totals.tax.toLocaleString("en-PK", { maximumFractionDigits: 0 })}</strong></span>
               <span className="text-[color:var(--color-pine)]">Total: <strong>{totals.total.toLocaleString("en-PK", { maximumFractionDigits: 0 })}</strong></span>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <ErrorNote msg={error} />
-              <button className="btn btn-primary" onClick={save} disabled={busy || !invoiceRef || !buyerId}>{busy ? "Saving…" : "Save draft"}</button>
+              <Button variant="ghost" onClick={() => save(false)} disabled={!invoiceRef || !buyerId} loadingText="Saving…">Save draft</Button>
+              <Button onClick={() => save(true)} disabled={!invoiceRef || !buyerId} loadingText="Transmitting…">Save &amp; transmit</Button>
             </div>
           </div>
         </>

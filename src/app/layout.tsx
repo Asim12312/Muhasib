@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { LangProvider } from "@/lib/i18n/context";
 import { getLangFromCookie } from "@/lib/i18n/server";
+import { PwaRegister } from "@/components/PwaRegister";
 
 export const metadata: Metadata = {
   title: {
@@ -10,6 +11,16 @@ export const metadata: Metadata = {
   },
   description:
     "Issue FBR-compliant digital invoices, transmit them to PRAL in real time, and manage every client from one dashboard. Built for Pakistani SMEs and tax consultants. English + اردو.",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: { capable: true, title: "Muhasib", statusBarStyle: "default" },
+  icons: { icon: "/icon.svg", apple: "/icon.svg" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1a5c3d",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -25,6 +36,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body className="min-h-screen antialiased">
+        <PwaRegister />
         <LangProvider initial={lang}>{children}</LangProvider>
       </body>
     </html>

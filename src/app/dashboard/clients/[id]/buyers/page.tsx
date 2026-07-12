@@ -2,6 +2,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { ErrorNote, Empty } from "@/components/ui";
+import { Button } from "@/components/Button";
 
 type Buyer = { _id: string; name: string; ntnOrCnic: string; registrationType: string; address: string; province: string };
 const provinces = ["Punjab", "Sindh", "Khyber Pakhtunkhwa", "Balochistan", "Islamabad Capital Territory", "Gilgit-Baltistan", "AJK"];
@@ -11,15 +12,13 @@ export default function BuyersPage() {
   const [buyers, setBuyers] = useState<Buyer[]>([]);
   const [form, setForm] = useState({ name: "", ntnOrCnic: "", registrationType: "registered", address: "", province: "Punjab" });
   const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
 
   const load = useCallback(() => fetch(`/api/clients/${id}/buyers`).then((r) => r.json()).then((d) => setBuyers(d.buyers || [])), [id]);
   useEffect(() => { load(); }, [load]);
 
   async function add() {
-    setBusy(true); setError("");
+    setError("");
     const res = await fetch(`/api/clients/${id}/buyers`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
-    setBusy(false);
     if (res.ok) { setForm({ name: "", ntnOrCnic: "", registrationType: "registered", address: "", province: "Punjab" }); load(); }
     else setError((await res.json()).error || "Could not add buyer.");
   }
@@ -48,7 +47,7 @@ export default function BuyersPage() {
           <select className="field" value={form.province} onChange={(e) => setForm({ ...form, province: e.target.value })}>{provinces.map((p) => <option key={p}>{p}</option>)}</select>
         </div>
         <div className="sm:col-span-2"><label className="label">Address</label><input className="field" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} /></div>
-        <div className="sm:col-span-2 flex items-center gap-4"><button className="btn btn-primary" onClick={add} disabled={busy || !form.name}>Add buyer</button><ErrorNote msg={error} /></div>
+        <div className="sm:col-span-2 flex items-center gap-4"><Button onClick={add} disabled={!form.name} loadingText="Adding…">Add buyer</Button><ErrorNote msg={error} /></div>
       </div>
 
       <div className="card mt-6 overflow-x-auto">

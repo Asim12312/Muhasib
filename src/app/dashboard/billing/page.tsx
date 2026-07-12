@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { PageTitle } from "@/components/ui";
+import { Button } from "@/components/Button";
 import { formatPKR } from "@/lib/penalty";
 
 type Plan = { label: string; clientLimit: number; pricePkr: number; blurb: string };
@@ -12,16 +13,14 @@ type Data = {
 
 export default function BillingPage() {
   const [data, setData] = useState<Data | null>(null);
-  const [busy, setBusy] = useState("");
 
   const load = useCallback(() => fetch("/api/firm").then((r) => r.json()).then(setData), []);
   useEffect(() => { load(); }, [load]);
 
   async function switchTier(tier: string) {
     if (!confirm(`Switch to the ${tier} plan?`)) return;
-    setBusy(tier);
     await fetch("/api/firm", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tier }) });
-    setBusy(""); load();
+    load();
   }
 
   if (!data) return <p className="text-sm text-[color:var(--color-ink-soft)]">Loading…</p>;
@@ -62,7 +61,7 @@ export default function BillingPage() {
               <p className="text-sm text-[color:var(--color-ink-soft)] mt-3 flex-1">{p.blurb}</p>
               {isCurrent
                 ? <span className="stamp stamp-accepted mt-4 self-start">Current</span>
-                : <button className="btn btn-ghost mt-4" disabled={busy === tier} onClick={() => switchTier(tier)}>{busy === tier ? "Switching…" : "Switch"}</button>}
+                : <Button variant="ghost" className="mt-4" onClick={() => switchTier(tier)} loadingText="Switching…">Switch</Button>}
             </div>
           );
         })}
