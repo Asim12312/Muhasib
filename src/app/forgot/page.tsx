@@ -1,22 +1,24 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { ErrorNote } from "@/components/ui";
 import { Button } from "@/components/Button";
-import { Recaptcha, RECAPTCHA_SITE_KEY } from "@/components/Recaptcha";
+import { Recaptcha, RecaptchaHandle, RECAPTCHA_SITE_KEY } from "@/components/Recaptcha";
 
 export default function ForgotPage() {
   const [email, setEmail] = useState("");
   const [captcha, setCaptcha] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
+  const captchaRef = useRef<RecaptchaHandle>(null);
 
   async function submit() {
     setError("");
     if (RECAPTCHA_SITE_KEY && !captcha) { setError("Please complete the “I'm not a robot” check."); return; }
     const res = await fetch("/api/auth/forgot", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, recaptchaToken: captcha }) });
-    if (res.ok) setDone(true);
-    else setError((await res.json()).error || "Something went wrong.");
+    if (res.ok) { setDone(true); return; }
+    captchaRef.current?.reset();
+    setError((await res.json()).error || "Something went wrong.");
   }
 
   return (
@@ -30,7 +32,7 @@ export default function ForgotPage() {
           <div className="mt-6 space-y-4">
             <p className="text-sm text-[color:var(--color-ink-soft)]">Enter your email and we&apos;ll send a reset link.</p>
             <div><label className="label">Email</label><input className="field" type="email" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} /></div>
-            <Recaptcha onToken={setCaptcha} />
+            <Recaptcha ref={captchaRef} onToken={setCaptcha} />
             <ErrorNote msg={error} />
             <Button className="w-full" onClick={submit} disabled={!email} loadingText="Sending…">Send reset link</Button>
             <p className="text-sm text-[color:var(--color-ink-soft)]"><Link href="/login" className="text-[color:var(--color-pine)] font-semibold hover:underline">Back to sign in</Link></p>

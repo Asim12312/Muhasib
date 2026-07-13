@@ -2,6 +2,7 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { PageTitle, Empty } from "@/components/ui";
+import { Button } from "@/components/Button";
 
 type Deadline = {
   _id: string; title: string; dueDate: string; status: string;
@@ -54,7 +55,7 @@ export default function CalendarPage() {
                     <td className="font-medium">{d.clientId ? <Link href={`/dashboard/clients/${d.clientId._id}/deadlines`} className="hover:text-[color:var(--color-pine)]">{d.clientId.businessName}</Link> : "—"}</td>
                     <td>{d.title}</td>
                     <td className="text-sm text-[color:var(--color-ink-soft)]">{d.assignedTo?.name || "—"}</td>
-                    <td className="text-right">{d.status !== "done" ? <button className="mono text-xs text-[color:var(--color-pine)]" onClick={() => markDone(d._id)}>Mark done</button> : <span className="stamp stamp-accepted">Done</span>}</td>
+                    <td className="text-right">{d.status !== "done" ? <Button variant="plain" className="text-xs text-[color:var(--color-pine)]" onClick={() => markDone(d._id)} loadingText="Saving…">Mark done</Button> : <span className="stamp stamp-accepted">Done</span>}</td>
                   </tr>
                 ))}
               </tbody>

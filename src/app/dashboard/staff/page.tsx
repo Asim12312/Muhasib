@@ -74,9 +74,9 @@ export default function StaffPage() {
                 </td>
                 <td><span className={`stamp ${s.status === "active" ? "stamp-accepted" : "stamp-draft"}`}>{s.status}</span></td>
                 <td className="text-right">
-                  <button className="mono text-xs text-[color:var(--color-stamp)]" onClick={() => update(s._id, { status: s.status === "active" ? "disabled" : "active" })}>
+                  <Button variant="plain" className="text-xs text-[color:var(--color-stamp)]" onClick={() => update(s._id, { status: s.status === "active" ? "disabled" : "active" })} loadingText="Saving…">
                     {s.status === "active" ? "Disable" : "Enable"}
-                  </button>
+                  </Button>
                 </td>
               </tr>
             ))}

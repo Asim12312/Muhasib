@@ -2,6 +2,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { ErrorNote, Empty } from "@/components/ui";
+import { Button } from "@/components/Button";
 
 type Doc = { _id: string; name: string; docType: string; year: string; size: number; createdAt: string };
 const DOC_TYPES: [string, string][] = [
@@ -72,7 +73,7 @@ export default function DocumentsPage() {
                 <td className="mono text-sm">{d.year || "—"}</td>
                 <td className="mono text-sm">{fmtSize(d.size)}</td>
                 <td className="mono text-xs">{new Date(d.createdAt).toLocaleDateString("en-PK")}</td>
-                <td className="text-right"><button className="btn btn-danger !py-1 !px-3 text-xs" onClick={() => remove(d._id)}>Delete</button></td>
+                <td className="text-right"><Button variant="danger" className="!py-1 !px-3 text-xs" onClick={() => remove(d._id)} loadingText="Deleting…">Delete</Button></td>
               </tr>
             ))}
             {docs.length === 0 && <Empty colSpan={6}>No documents yet — upload the client&apos;s NTN certificate to start.</Empty>}

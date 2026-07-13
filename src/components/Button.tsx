@@ -1,7 +1,7 @@
 "use client";
 import { useState, useCallback, ButtonHTMLAttributes } from "react";
 
-type Variant = "primary" | "ghost" | "danger";
+type Variant = "primary" | "ghost" | "danger" | "plain";
 
 interface Props extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> {
   variant?: Variant;
@@ -29,13 +29,17 @@ export function Button({ variant = "primary", loading, loadingText, onClick, dis
     }
   }, [onClick]);
 
+  // "plain" skips the box/padding styling entirely — for inline text-link
+  // actions (table row actions, etc.) that must keep their compact look.
+  const base = variant === "plain" ? "inline-flex items-center gap-1.5 disabled:opacity-50" : `btn btn-${variant}`;
+
   return (
     <button
       {...rest}
       onClick={handle}
       disabled={disabled || isLoading}
       aria-busy={isLoading}
-      className={`btn btn-${variant} ${className}`}
+      className={`${base} ${className}`}
     >
       {isLoading && <span className="spinner" aria-hidden />}
       <span>{isLoading && loadingText ? loadingText : children}</span>

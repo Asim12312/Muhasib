@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ErrorNote } from "@/components/ui";
+import { Button } from "@/components/Button";
 
 export default function AcceptInvite() {
   const { token } = useParams();
@@ -12,7 +13,6 @@ export default function AcceptInvite() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     fetch(`/api/invite/${token}`).then((r) => r.json()).then((d) => {
@@ -21,11 +21,10 @@ export default function AcceptInvite() {
   }, [token]);
 
   async function submit() {
-    setBusy(true); setError("");
+    setError("");
     const res = await fetch(`/api/invite/${token}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, password }) });
-    setBusy(false);
-    if (res.ok) router.push("/dashboard");
-    else setError((await res.json()).error || "Could not accept invitation.");
+    if (res.ok) { router.push("/dashboard"); return; }
+    setError((await res.json()).error || "Could not accept invitation.");
   }
 
   return (
@@ -44,7 +43,7 @@ export default function AcceptInvite() {
               <div><label className="label">Your name</label><input className="field" value={name} onChange={(e) => setName(e.target.value)} /></div>
               <div><label className="label">Password (8+ characters)</label><input className="field" type="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} /></div>
               <ErrorNote msg={error} />
-              <button className="btn btn-primary w-full" onClick={submit} disabled={busy || !name || !password}>{busy ? "Joining…" : "Join firm"}</button>
+              <Button className="w-full" onClick={submit} disabled={!name || !password} loadingText="Joining…">Join firm</Button>
             </div>
           </>
         )}

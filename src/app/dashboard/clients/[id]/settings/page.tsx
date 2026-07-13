@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { ErrorNote } from "@/components/ui";
 import { Button } from "@/components/Button";
 import { PralGuide } from "@/components/PralGuide";
+import { useMe } from "@/lib/useMe";
 
 const provinces = ["Punjab", "Sindh", "Khyber Pakhtunkhwa", "Balochistan", "Islamabad Capital Territory", "Gilgit-Baltistan", "AJK"];
 const STATUSES: [string, string][] = [["onboarding", "Onboarding"], ["active", "Active"], ["pending_docs", "Pending docs"], ["at_risk", "At risk"], ["dormant", "Dormant"]];
@@ -11,10 +12,11 @@ const STATUSES: [string, string][] = [["onboarding", "Onboarding"], ["active", "
 export default function ClientSettings() {
   const { id } = useParams();
   const router = useRouter();
+  const { user } = useMe();
+  const isPrincipal = user?.role === "principal";
   const [c, setC] = useState<Record<string, unknown> | null>(null);
   const [staff, setStaff] = useState<{ _id: string; name: string }[]>([]);
   const [assigned, setAssigned] = useState<string[]>([]);
-  const [isPrincipal, setIsPrincipal] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
 
@@ -22,13 +24,11 @@ export default function ClientSettings() {
     fetch(`/api/clients/${id}`).then((r) => r.json()).then((d) => {
       if (d.client) { setC(d.client); setAssigned((d.client.assignedTo || []).map((a: { _id: string }) => a._id)); }
     });
-    fetch("/api/auth/me").then((r) => r.json()).then((d) => {
-      if (d.user?.role === "principal") {
-        setIsPrincipal(true);
-        fetch("/api/firm/staff").then((r) => r.json()).then((sd) => setStaff(sd.staff || []));
-      }
-    });
   }, [id]);
+
+  useEffect(() => {
+    if (isPrincipal) fetch("/api/firm/staff").then((r) => r.json()).then((sd) => setStaff(sd.staff || []));
+  }, [isPrincipal]);
 
   const set = (patch: Record<string, unknown>) => setC((p) => ({ ...(p || {}), ...patch }));
 

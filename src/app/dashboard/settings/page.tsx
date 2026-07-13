@@ -3,32 +3,33 @@ import { useEffect, useState } from "react";
 import { PageTitle, ErrorNote, RoleBadge } from "@/components/ui";
 import { Button } from "@/components/Button";
 import { PralGuide } from "@/components/PralGuide";
+import { useMe } from "@/lib/useMe";
 
 export default function FirmSettings() {
+  const { user, firm: sharedFirm, loading, refresh } = useMe();
   const [firm, setFirm] = useState({ name: "", billingEmail: "", phone: "", pralApiUrl: "" });
-  const [me, setMe] = useState({ name: "", role: "", email: "" });
+  const [name, setName] = useState("");
   const [saved, setSaved] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("/api/auth/me").then((r) => r.json()).then((d) => {
-      if (d.user) setMe(d.user);
-      if (d.firm) setFirm({ name: d.firm.name || "", billingEmail: d.firm.billingEmail || "", phone: d.firm.phone || "", pralApiUrl: d.firm.pralApiUrl || "" });
-    });
-  }, []);
+    if (user) setName(user.name);
+    if (sharedFirm) setFirm({ name: sharedFirm.name || "", billingEmail: sharedFirm.billingEmail || "", phone: sharedFirm.phone || "", pralApiUrl: sharedFirm.pralApiUrl || "" });
+  }, [user, sharedFirm]);
 
   async function saveFirm() {
     setSaved(""); setError("");
     const res = await fetch("/api/firm", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(firm) });
-    if (res.ok) setSaved("firm"); else setError((await res.json()).error || "Could not save.");
+    if (res.ok) { setSaved("firm"); refresh(); } else setError((await res.json()).error || "Could not save.");
   }
   async function saveMe() {
     setSaved(""); setError("");
-    const res = await fetch("/api/auth/me", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: me.name }) });
-    if (res.ok) setSaved("me"); else setError("Could not save.");
+    const res = await fetch("/api/auth/me", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name }) });
+    if (res.ok) { setSaved("me"); refresh(); } else setError("Could not save.");
   }
 
-  const isPrincipal = me.role === "principal";
+  const isPrincipal = user?.role === "principal";
+  if (loading) return <p className="text-sm text-[color:var(--color-ink-soft)]">Loading…</p>;
   return (
     <div>
       <PageTitle kicker="Settings" title="Firm & your profile" sub="Your firm's details, FBR/PRAL connection, and your own account. Each client's seller profile lives under that client's Settings." />
@@ -59,9 +60,9 @@ export default function FirmSettings() {
       )}
 
       <div className="card p-6 mt-6 grid sm:grid-cols-2 gap-4">
-        <div className="sm:col-span-2 flex items-center gap-2"><p className="kicker !mb-0">You</p><RoleBadge role={me.role} /></div>
-        <div><label className="label">Your name</label><input className="field" value={me.name} onChange={(e) => setMe({ ...me, name: e.target.value })} /></div>
-        <div><label className="label">Email</label><input className="field mono" value={me.email} disabled /></div>
+        <div className="sm:col-span-2 flex items-center gap-2"><p className="kicker !mb-0">You</p><RoleBadge role={user?.role || ""} /></div>
+        <div><label className="label">Your name</label><input className="field" value={name} onChange={(e) => setName(e.target.value)} /></div>
+        <div><label className="label">Email</label><input className="field mono" value={user?.email || ""} disabled /></div>
         <div className="sm:col-span-2 flex items-center gap-4"><Button onClick={saveMe}>Save profile</Button>{saved === "me" && <span className="stamp stamp-accepted">Saved</span>}</div>
       </div>
       <div className="mt-3"><ErrorNote msg={error} /></div>

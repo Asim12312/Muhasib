@@ -1,8 +1,9 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
+import { getJwtSecret } from "./env";
 
-const secret = () => new TextEncoder().encode(process.env.JWT_SECRET || "dev-secret-change-me");
+const secret = () => new TextEncoder().encode(getJwtSecret());
 export const SESSION_COOKIE = "muhasib_session";
 
 export async function hashPassword(pw: string) {

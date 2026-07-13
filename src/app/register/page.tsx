@@ -1,12 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ErrorNote } from "@/components/ui";
 import { Button } from "@/components/Button";
 import { useLang } from "@/lib/i18n/context";
 import { LangToggle } from "@/components/LangToggle";
-import { Recaptcha, RECAPTCHA_SITE_KEY } from "@/components/Recaptcha";
+import { Recaptcha, RecaptchaHandle, RECAPTCHA_SITE_KEY } from "@/components/Recaptcha";
 import { GoogleButton, GOOGLE_ENABLED } from "@/components/GoogleButton";
 
 export default function RegisterPage() {
@@ -19,6 +19,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [captcha, setCaptcha] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const captchaRef = useRef<RecaptchaHandle>(null);
 
   async function submit() {
     setError("");
@@ -27,8 +28,9 @@ export default function RegisterPage() {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ firmName, name, email, password, recaptchaToken: captcha }),
     });
-    if (res.ok) router.push("/dashboard");
-    else setError((await res.json()).error || "Registration failed.");
+    if (res.ok) { router.push("/dashboard"); return; }
+    captchaRef.current?.reset();
+    setError((await res.json()).error || "Registration failed.");
   }
 
   return (
@@ -64,7 +66,7 @@ export default function RegisterPage() {
             <input id="pw" className="field" type="password" value={password}
               onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} />
           </div>
-          <Recaptcha onToken={setCaptcha} />
+          <Recaptcha ref={captchaRef} onToken={setCaptcha} />
           <ErrorNote msg={error} />
           <Button className="w-full" onClick={submit} disabled={!firmName || !name} loadingText={t("auth_creating")}>{t("auth_create_btn")}</Button>
           <p className="text-sm text-[color:var(--color-ink-soft)]">

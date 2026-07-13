@@ -60,7 +60,7 @@ export default function BuyersPage() {
                 <td className="mono">{b.ntnOrCnic || "—"}</td>
                 <td className="capitalize">{b.registrationType}</td>
                 <td>{b.province}</td>
-                <td className="text-right"><button className="btn btn-danger !py-1 !px-3 text-xs" onClick={() => remove(b._id)}>Remove</button></td>
+                <td className="text-right"><Button variant="danger" className="!py-1 !px-3 text-xs" onClick={() => remove(b._id)} loadingText="Removing…">Remove</Button></td>
               </tr>
             ))}
             {buyers.length === 0 && <Empty colSpan={5}>No buyers yet — add the first one above.</Empty>}

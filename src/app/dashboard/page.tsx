@@ -2,6 +2,7 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { PageTitle, HealthDot } from "@/components/ui";
+import { useMe } from "@/lib/useMe";
 
 type Fire = { id: string; invoiceRef?: string; title?: string; client: string; clientId: string; reason?: string; editableUntil?: string; dueDate?: string; overdue?: boolean };
 type Stats = {
@@ -19,9 +20,10 @@ function fmtDate(d?: string) {
 }
 
 export default function Overview() {
+  const { user } = useMe();
+  const isPrincipal = user?.role === "principal";
   const [stats, setStats] = useState<Stats | null>(null);
   const [staff, setStaff] = useState<Staff[]>([]);
-  const [isPrincipal, setIsPrincipal] = useState(false);
   const [filter, setFilter] = useState("");
 
   const load = useCallback((staffId: string) => {
@@ -30,13 +32,8 @@ export default function Overview() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/auth/me").then((r) => r.json()).then((d) => {
-      if (d.user?.role === "principal") {
-        setIsPrincipal(true);
-        fetch("/api/firm/staff").then((r) => r.json()).then((sd) => setStaff(sd.staff || [])).catch(() => {});
-      }
-    });
-  }, []);
+    if (isPrincipal) fetch("/api/firm/staff").then((r) => r.json()).then((sd) => setStaff(sd.staff || [])).catch(() => {});
+  }, [isPrincipal]);
   useEffect(() => { load(filter); }, [filter, load]);
 
   const h = stats?.health;

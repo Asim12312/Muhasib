@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
+import { getJwtSecret } from "./lib/env";
 
 const SESSION_COOKIE = "muhasib_session";
 
@@ -8,7 +9,7 @@ export async function middleware(req: NextRequest) {
   let authed = false;
   if (token) {
     try {
-      await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET || "dev-secret-change-me"));
+      await jwtVerify(token, new TextEncoder().encode(getJwtSecret()));
       authed = true;
     } catch {}
   }

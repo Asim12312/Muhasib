@@ -1,12 +1,12 @@
 "use client";
-import { useState, Suspense } from "react";
+import { useRef, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ErrorNote } from "@/components/ui";
 import { Button } from "@/components/Button";
 import { useLang } from "@/lib/i18n/context";
 import { LangToggle } from "@/components/LangToggle";
-import { Recaptcha, RECAPTCHA_SITE_KEY } from "@/components/Recaptcha";
+import { Recaptcha, RecaptchaHandle, RECAPTCHA_SITE_KEY } from "@/components/Recaptcha";
 import { GoogleButton, GOOGLE_ENABLED } from "@/components/GoogleButton";
 
 function LoginForm() {
@@ -18,6 +18,7 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [captcha, setCaptcha] = useState<string | null>(null);
   const [error, setError] = useState(params.get("error") || "");
+  const captchaRef = useRef<RecaptchaHandle>(null);
 
   async function submit() {
     setError("");
@@ -26,8 +27,11 @@ function LoginForm() {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password, recaptchaToken: captcha }),
     });
-    if (res.ok) router.push(params.get("next") || "/dashboard");
-    else setError((await res.json()).error || "Sign-in failed.");
+    if (res.ok) { router.push(params.get("next") || "/dashboard"); return; }
+    // The captcha token is single-use — reset the widget so the box
+    // doesn't sit there falsely looking "checked" for the next attempt.
+    captchaRef.current?.reset();
+    setError((await res.json()).error || "Sign-in failed.");
   }
 
   return (
@@ -56,7 +60,7 @@ function LoginForm() {
           <input id="pw" className="field mt-2" type="password" value={password}
             onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} />
         </div>
-        <Recaptcha onToken={setCaptcha} />
+        <Recaptcha ref={captchaRef} onToken={setCaptcha} />
         <ErrorNote msg={error} />
         <Button className="w-full" onClick={submit} loadingText={t("auth_signing_in")}>{t("auth_signin")}</Button>
         <p className="text-sm text-[color:var(--color-ink-soft)]">

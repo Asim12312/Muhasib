@@ -1,6 +1,14 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/muhasib";
+function resolveMongoUri(): string {
+  const uri = process.env.MONGODB_URI;
+  if (uri) return uri;
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("MONGODB_URI is not set. Add it to your production environment variables.");
+  }
+  return "mongodb://localhost:27017/muhasib";
+}
+const MONGODB_URI = resolveMongoUri();
 
 type Cached = { conn: typeof mongoose | null; promise: Promise<typeof mongoose> | null };
 const g = global as unknown as { _mongoose?: Cached };

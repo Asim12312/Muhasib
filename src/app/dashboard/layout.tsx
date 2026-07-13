@@ -8,6 +8,8 @@ import { CommandSwitcher } from "@/components/CommandSwitcher";
 import { InstallPwaButton } from "@/components/InstallPwaButton";
 import { LinkSpinner } from "@/components/LinkSpinner";
 import { VerifyBanner } from "@/components/VerifyBanner";
+import { MeProvider, useMe } from "@/lib/useMe";
+import { Button } from "@/components/Button";
 
 function Icon({ name }: { name: string }) {
   const p = { className: "side-icon", stroke: "currentColor", strokeWidth: 1.75, fill: "none", strokeLinecap: "round" as const, strokeLinejoin: "round" as const, viewBox: "0 0 24 24" };
@@ -24,22 +26,25 @@ function Icon({ name }: { name: string }) {
 }
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <MeProvider>
+      <DashboardShell>{children}</DashboardShell>
+    </MeProvider>
+  );
+}
+
+function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { lang } = useLang();
   const isUr = lang === "ur";
-  const [me, setMe] = useState<{ name: string; role: string; firm: string } | null>(null);
+  const { user, firm } = useMe();
   const [drawer, setDrawer] = useState(false);
 
-  useEffect(() => {
-    fetch("/api/auth/me").then((r) => r.json()).then((d) => {
-      if (d.user) setMe({ name: d.user.name, role: d.user.role, firm: d.firm?.name || "" });
-    }).catch(() => {});
-  }, []);
   // Close the mobile drawer whenever the route changes
   useEffect(() => { setDrawer(false); }, [pathname]);
 
-  const isPrincipal = me?.role === "principal";
+  const isPrincipal = user?.role === "principal";
   const nav = [
     { href: "/dashboard", icon: "overview", label_en: "Overview", label_ur: "خلاصہ", show: true },
     { href: "/dashboard/clients", icon: "clients", label_en: "Clients", label_ur: "کلائنٹس", show: true },
@@ -62,7 +67,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </Link>
         <LangToggle />
       </div>
-      {me?.firm && <p className="px-2 mt-1 text-xs text-[color:var(--color-ink-soft)] truncate">{me.firm}</p>}
+      {firm?.name && <p className="px-2 mt-1 text-xs text-[color:var(--color-ink-soft)] truncate">{firm.name}</p>}
 
       <button
         onClick={() => { setDrawer(false); window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true })); }}
@@ -87,11 +92,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       <div className="mt-auto pt-6">
         <InstallPwaButton />
-        <button onClick={logout} className="side-link w-full text-left mt-1">
+        <Button variant="plain" onClick={logout} className="side-link w-full text-left mt-1" loadingText={isUr ? "لاگ آؤٹ ہو رہا ہے…" : "Signing out…"}>
           <Icon name="logout" />
           <span>{isUr ? "لاگ آؤٹ" : "Sign out"}</span>
-        </button>
-        {me && <p className="mono text-xs text-[color:var(--color-ink-mute)] mt-4 px-3 truncate">{me.name} · <span className="uppercase">{me.role}</span></p>}
+        </Button>
+        {user && <p className="mono text-xs text-[color:var(--color-ink-mute)] mt-4 px-3 truncate">{user.name} · <span className="uppercase">{user.role}</span></p>}
       </div>
     </>
   );

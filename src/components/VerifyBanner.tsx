@@ -1,25 +1,21 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useMe } from "@/lib/useMe";
 
 /** Soft email-verification banner: users can work, but see this until they
  *  verify (FBR transmission stays blocked server-side until they do). */
 export function VerifyBanner() {
-  const [show, setShow] = useState(false);
+  const { user, refresh } = useMe();
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
 
-  useEffect(() => {
-    fetch("/api/auth/me").then((r) => r.json()).then((d) => {
-      if (d.user && d.user.emailVerified === false) setShow(true);
-    }).catch(() => {});
-  }, []);
-
-  if (!show) return null;
+  if (!user || user.emailVerified) return null;
 
   async function resend() {
     setSending(true);
     await fetch("/api/auth/verify", { method: "PUT" }).catch(() => {});
     setSending(false); setSent(true);
+    refresh();
   }
 
   return (
