@@ -55,7 +55,7 @@ export default function ClientInvoiceImport() {
 
   function downloadTemplate() {
     const blob = new Blob([TEMPLATE], { type: "text/csv" });
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "muhasib-invoices-template.csv"; a.click(); URL.revokeObjectURL(a.href);
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "mohasib-invoices-template.csv"; a.click(); URL.revokeObjectURL(a.href);
   }
 
   return (

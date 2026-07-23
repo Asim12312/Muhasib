@@ -1,4 +1,4 @@
-# Muhasib — FBR Digital Invoicing SaaS
+# Mohasib — FBR Digital Invoicing SaaS
 
 Issue FBR-compliant digital invoices, transmit them to PRAL in real time, and manage
 every client from one dashboard. Built for Pakistani SMEs and tax consultants.

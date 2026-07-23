@@ -1,7 +1,7 @@
-/* Muhasib service worker — minimal app-shell caching + offline fallback.
+/* Mohasib service worker — minimal app-shell caching + offline fallback.
    Enough to satisfy installability and keep the shell usable offline;
    API calls always go to the network. */
-const CACHE = "muhasib-v1";
+const CACHE = "mohasib-v1";
 const SHELL = ["/dashboard", "/offline.html", "/icon.svg", "/manifest.webmanifest"];
 
 self.addEventListener("install", (e) => {

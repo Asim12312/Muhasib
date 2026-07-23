@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 import { getJwtSecret } from "./lib/env";
 
-const SESSION_COOKIE = "muhasib_session";
+const SESSION_COOKIE = "mohasib_session";
 
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get(SESSION_COOKIE)?.value;

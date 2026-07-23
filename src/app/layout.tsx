@@ -6,13 +6,13 @@ import { PwaRegister } from "@/components/PwaRegister";
 
 export const metadata: Metadata = {
   title: {
-    default: "Muhasib — FBR digital invoicing for Pakistani businesses & tax consultants",
-    template: "%s · Muhasib",
+    default: "Mohasib — FBR digital invoicing for Pakistani businesses & tax consultants",
+    template: "%s · Mohasib",
   },
   description:
     "Issue FBR-compliant digital invoices, transmit them to PRAL in real time, and manage every client from one dashboard. Built for Pakistani SMEs and tax consultants. English + اردو.",
   manifest: "/manifest.webmanifest",
-  appleWebApp: { capable: true, title: "Muhasib", statusBarStyle: "default" },
+  appleWebApp: { capable: true, title: "Mohasib", statusBarStyle: "default" },
   icons: { icon: "/icon.svg", apple: "/icon.svg" },
 };
 

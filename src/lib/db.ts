@@ -6,7 +6,7 @@ function resolveMongoUri(): string {
   if (process.env.NODE_ENV === "production") {
     throw new Error("MONGODB_URI is not set. Add it to your production environment variables.");
   }
-  return "mongodb://localhost:27017/muhasib";
+  return "mongodb://localhost:27017/mohasib";
 }
 const MONGODB_URI = resolveMongoUri();
 

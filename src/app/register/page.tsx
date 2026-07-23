@@ -37,7 +37,7 @@ export default function RegisterPage() {
     <main className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="card p-6 sm:p-8 w-full max-w-sm">
         <div className="flex items-center justify-between">
-          <Link href="/" className="display font-bold text-lg text-[color:var(--color-pine-deep)]">{isUr ? "مُحاسِب" : "Muhasib"}</Link>
+          <Link href="/" className="display font-bold text-lg text-[color:var(--color-pine-deep)]">{isUr ? "مُحاسِب" : "Mohasib"}</Link>
           <LangToggle />
         </div>
         <h1 className="display text-2xl font-bold mt-6">{isUr ? "اپنی فرم رجسٹر کریں" : "Create your firm account"}</h1>

@@ -24,7 +24,7 @@ export default function ForgotPage() {
   return (
     <main className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="card p-6 sm:p-8 w-full max-w-sm">
-        <Link href="/" className="display font-bold text-lg text-[color:var(--color-pine-deep)]">Muhasib</Link>
+        <Link href="/" className="display font-bold text-lg text-[color:var(--color-pine-deep)]">Mohasib</Link>
         <h1 className="display text-2xl font-bold mt-6">Reset your password</h1>
         {done ? (
           <p className="text-sm text-[color:var(--color-ink-soft)] mt-4">If an account exists for <span className="mono">{email}</span>, we&apos;ve sent a reset link. Check your inbox (and spam). The link expires in 1 hour.</p>

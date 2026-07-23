@@ -1,6 +1,6 @@
 {
-  "name": "Muhasib — FBR Compliance Workspace",
-  "short_name": "Muhasib",
+  "name": "Mohasib — FBR Compliance Workspace",
+  "short_name": "Mohasib",
   "description": "FBR digital invoicing and compliance workspace for tax consultancy firms.",
   "start_url": "/dashboard",
   "scope": "/",

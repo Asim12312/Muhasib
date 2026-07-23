@@ -30,7 +30,7 @@ export default function AcceptInvite() {
   return (
     <main className="min-h-screen flex items-center justify-center px-6 py-12">
       <div className="card p-8 w-full max-w-sm">
-        <Link href="/" className="display font-bold text-lg text-[color:var(--color-pine-deep)]">Muhasib</Link>
+        <Link href="/" className="display font-bold text-lg text-[color:var(--color-pine-deep)]">Mohasib</Link>
         {invalid ? (
           <p className="text-sm text-[color:var(--color-stamp)] mt-6">This invitation is invalid or has expired. Ask your firm principal to send a new one.</p>
         ) : !info ? (

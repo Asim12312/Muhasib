@@ -1,11 +1,11 @@
 ---
-name: muhasib-position1-architecture
-description: Muhasib was re-architected from single-seller invoicing to a multi-tenant consultant platform (Position 1)
+name: mohasib-position1-architecture
+description: Mohasib was re-architected from single-seller invoicing to a multi-tenant consultant platform (Position 1)
 metadata:
   type: project
 ---
 
-Muhasib (FBR digital invoicing SaaS) was re-architected on 2026-07-12 from a single-business invoicing app into a **multi-tenant platform for tax consultancy firms managing many SME clients** ("Position 1"). This was a deliberate product pivot chosen by the user after competitor research.
+Mohasib (FBR digital invoicing SaaS, formerly branded "Muhasib" — renamed 2026-07-13 to match the production domain mohasib.online) was re-architected on 2026-07-12 from a single-business invoicing app into a **multi-tenant platform for tax consultancy firms managing many SME clients** ("Position 1"). This was a deliberate product pivot chosen by the user after competitor research.
 
 Data hierarchy: **Firm** (tenant/paying customer) → **User** (staff: principal/manager/associate) → **Client** (a managed SME — its own NTN/STRN + per-SME FBR connection) → **Buyer** (the SME's customers) → **Invoice**. Plus Deadline, StoredDocument (inline Buffer, 8MB cap), AuditLog, Invite.
 

@@ -13,7 +13,7 @@ export const STRINGS = {
   hero_title_1: { en: "Every invoice transmitted.", ur: "ہر انوائس ایف بی آر تک۔" },
   hero_title_2: { en: "Every penalty avoided.", ur: "ہر جرمانے سے حفاظت۔" },
   hero_body: {
-    en: "Muhasib issues FBR-compliant digital invoices, transmits them to PRAL in real time, and returns the 22-digit invoice number and QR code — for your own business, or for every client on your books.",
+    en: "Mohasib issues FBR-compliant digital invoices, transmits them to PRAL in real time, and returns the 22-digit invoice number and QR code — for your own business, or for every client on your books.",
     ur: "مُحاسِب ایف بی آر کے قواعد کے مطابق ڈیجیٹل انوائس بناتا ہے، انہیں فوری طور پر پی آر اے ایل کو بھیجتا ہے، اور 22 ہندسوں کا انوائس نمبر اور کیو آر کوڈ واپس دیتا ہے — آپ کے اپنے کاروبار کے لیے، یا آپ کے ہر کلائنٹ کے لیے۔",
   },
   hero_cta: { en: "Create your account", ur: "اکاؤنٹ بنائیں" },
@@ -61,7 +61,7 @@ export const STRINGS = {
   price_firm_per: { en: "per client / month", ur: "فی کلائنٹ / مہینہ" },
 
   // Footer
-  footer_line_1: { en: "Muhasib · FBR digital invoicing · Lahore, Pakistan", ur: "مُحاسِب · ایف بی آر ڈیجیٹل انوائسنگ · لاہور، پاکستان" },
+  footer_line_1: { en: "Mohasib · FBR digital invoicing · Lahore, Pakistan", ur: "مُحاسِب · ایف بی آر ڈیجیٹل انوائسنگ · لاہور، پاکستان" },
   footer_line_2: {
     en: "Penalty figures are estimates based on Section 33, Sales Tax Act 1990 as cited by licensed integrators — verify against the current text of the law.",
     ur: "جرمانے کے تخمینے سیلز ٹیکس ایکٹ 1990 کی دفعہ 33 سے لیے گئے ہیں جیسا کہ لائسنس یافتہ انٹیگریٹرز حوالہ دیتے ہیں — قانون کے موجودہ متن سے تصدیق کر لیں۔",

@@ -5,8 +5,8 @@
  *
  * Required env for real delivery:
  *   RESEND_API_KEY   — your Resend API key
- *   EMAIL_FROM       — verified sender, e.g. "Muhasib <noreply@yourdomain.pk>"
- *   APP_URL          — base URL for links, e.g. https://app.muhasib.pk
+ *   EMAIL_FROM       — verified sender, e.g. "Mohasib <noreply@yourdomain.pk>"
+ *   APP_URL          — base URL for links, e.g. https://app.mohasib.pk
  */
 export function appUrl(fallbackOrigin?: string): string {
   return process.env.APP_URL || fallbackOrigin || "http://localhost:3000";
@@ -35,22 +35,22 @@ export async function sendEmail(opts: { to: string; subject: string; html: strin
 function shell(title: string, body: string, cta?: { label: string; href: string }) {
   return `<!doctype html><html><body style="margin:0;background:#f4f5f1;font-family:Arial,Helvetica,sans-serif;color:#14231c">
   <div style="max-width:520px;margin:0 auto;padding:32px 24px">
-    <div style="font-size:22px;font-weight:700;color:#103d28;margin-bottom:24px">Muhasib</div>
+    <div style="font-size:22px;font-weight:700;color:#103d28;margin-bottom:24px">Mohasib</div>
     <div style="background:#fff;border:1px solid #d6ddd5;border-radius:12px;padding:28px">
       <h1 style="font-size:18px;margin:0 0 12px">${title}</h1>
       <div style="font-size:14px;line-height:1.6;color:#4b5c53">${body}</div>
       ${cta ? `<div style="margin-top:24px"><a href="${cta.href}" style="display:inline-block;background:#1a5c3d;color:#fff;text-decoration:none;padding:12px 22px;border-radius:6px;font-weight:600;font-size:14px">${cta.label}</a></div>
       <p style="font-size:12px;color:#7a8880;margin-top:16px;word-break:break-all">Or paste this link:<br>${cta.href}</p>` : ""}
     </div>
-    <p style="font-size:11px;color:#7a8880;margin-top:20px">Muhasib · FBR digital invoicing · Lahore, Pakistan</p>
+    <p style="font-size:11px;color:#7a8880;margin-top:20px">Mohasib · FBR digital invoicing · Lahore, Pakistan</p>
   </div></body></html>`;
 }
 
 export const templates = {
   verify: (link: string) =>
-    shell("Verify your email", "Confirm your email address to unlock FBR transmission on your Muhasib account.", { label: "Verify email", href: link }),
+    shell("Verify your email", "Confirm your email address to unlock FBR transmission on your Mohasib account.", { label: "Verify email", href: link }),
   reset: (link: string) =>
-    shell("Reset your password", "We received a request to reset your Muhasib password. This link expires in 1 hour. If you didn't ask for this, you can ignore this email.", { label: "Reset password", href: link }),
+    shell("Reset your password", "We received a request to reset your Mohasib password. This link expires in 1 hour. If you didn't ask for this, you can ignore this email.", { label: "Reset password", href: link }),
   invite: (firmName: string, role: string, link: string) =>
-    shell(`Join ${firmName} on Muhasib`, `You've been invited as <strong>${role}</strong>. Set your name and password to get started. This invitation expires in 14 days.`, { label: "Accept invitation", href: link }),
+    shell(`Join ${firmName} on Mohasib`, `You've been invited as <strong>${role}</strong>. Set your name and password to get started. This invitation expires in 14 days.`, { label: "Accept invitation", href: link }),
 };

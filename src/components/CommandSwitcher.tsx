@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 
 type Client = { _id: string; businessName: string; ntn?: string; status?: string };
 
-const RECENT_KEY = "muhasib_recent_clients";
+const RECENT_KEY = "mohasib_recent_clients";
 
 export function pushRecentClient(c: { _id: string; businessName: string }) {
   if (typeof window === "undefined") return;

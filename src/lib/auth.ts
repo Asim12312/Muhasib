@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { getJwtSecret } from "./env";
 
 const secret = () => new TextEncoder().encode(getJwtSecret());
-export const SESSION_COOKIE = "muhasib_session";
+export const SESSION_COOKIE = "mohasib_session";
 
 export async function hashPassword(pw: string) {
   return bcrypt.hash(pw, 10);

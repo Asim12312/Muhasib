@@ -63,7 +63,7 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
     <>
       <div className="flex items-center justify-between px-2">
         <Link href="/dashboard" className="display font-bold text-xl text-[color:var(--color-pine-deep)]">
-          {isUr ? "مُحاسِب" : "Muhasib"}
+          {isUr ? "مُحاسِب" : "Mohasib"}
         </Link>
         <LangToggle />
       </div>
@@ -110,7 +110,7 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
         <button aria-label="Open menu" onClick={() => setDrawer(true)} className="p-2 -ml-2">
           <svg width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.75" fill="none" strokeLinecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
         </button>
-        <Link href="/dashboard" className="display font-bold text-lg text-[color:var(--color-pine-deep)]">{isUr ? "مُحاسِب" : "Muhasib"}</Link>
+        <Link href="/dashboard" className="display font-bold text-lg text-[color:var(--color-pine-deep)]">{isUr ? "مُحاسِب" : "Mohasib"}</Link>
         <LangToggle />
       </header>
 

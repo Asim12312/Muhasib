@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
   });
   const link = `${appUrl(req.nextUrl.origin)}/invite/${token}`;
   const firm = await Firm.findById(s.firmId).select("name");
-  await sendEmail({ to: String(email).toLowerCase(), subject: `You're invited to ${firm?.name || "a firm"} on Muhasib`, html: templates.invite(firm?.name || "the firm", cleanRole, link) });
+  await sendEmail({ to: String(email).toLowerCase(), subject: `You're invited to ${firm?.name || "a firm"} on Mohasib`, html: templates.invite(firm?.name || "the firm", cleanRole, link) });
   await logAudit(s, "staff.invite", { detail: `${email} as ${cleanRole}` });
   return NextResponse.json({ token, link: `/invite/${token}` }, { status: 201 });
 }

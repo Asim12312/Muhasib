@@ -16,7 +16,7 @@ function VerifyInner() {
 
   return (
     <div className="card p-6 sm:p-8 w-full max-w-sm text-center">
-      <Link href="/" className="display font-bold text-lg text-[color:var(--color-pine-deep)]">Muhasib</Link>
+      <Link href="/" className="display font-bold text-lg text-[color:var(--color-pine-deep)]">Mohasib</Link>
       {state === "working" && <p className="text-sm text-[color:var(--color-ink-soft)] mt-6">Verifying your email…</p>}
       {state === "ok" && (
         <>

@@ -18,7 +18,7 @@ export function LangProvider({ children, initial }: { children: ReactNode; initi
 
   function setLang(l: Lang) {
     setLangState(l);
-    document.cookie = `muhasib_lang=${l}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
+    document.cookie = `mohasib_lang=${l}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
   }
 
   return (

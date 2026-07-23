@@ -41,7 +41,7 @@ export default function ClientImportPage() {
   function downloadTemplate() {
     const blob = new Blob([TEMPLATE], { type: "text/csv" });
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob); a.download = "muhasib-clients-template.csv"; a.click();
+    a.href = URL.createObjectURL(blob); a.download = "mohasib-clients-template.csv"; a.click();
     URL.revokeObjectURL(a.href);
   }
 

@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     const token = randomBytes(24).toString("hex");
     await AuthToken.create({ userId: user._id, type: "reset", token, expiresAt: new Date(Date.now() + 60 * 60 * 1000) });
     const link = `${appUrl(req.nextUrl.origin)}/reset?token=${token}`;
-    await sendEmail({ to: user.email, subject: "Reset your password · Muhasib", html: templates.reset(link) });
+    await sendEmail({ to: user.email, subject: "Reset your password · Mohasib", html: templates.reset(link) });
   }
   return NextResponse.json({ ok: true });
 }

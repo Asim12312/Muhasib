@@ -22,7 +22,7 @@ function ResetForm() {
 
   return (
     <div className="card p-6 sm:p-8 w-full max-w-sm">
-      <Link href="/" className="display font-bold text-lg text-[color:var(--color-pine-deep)]">Muhasib</Link>
+      <Link href="/" className="display font-bold text-lg text-[color:var(--color-pine-deep)]">Mohasib</Link>
       <h1 className="display text-2xl font-bold mt-6">Choose a new password</h1>
       {!token ? (
         <p className="text-sm text-[color:var(--color-stamp)] mt-4">This reset link is missing its token. Request a new one from the <Link href="/forgot" className="underline">forgot password</Link> page.</p>
