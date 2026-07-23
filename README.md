@@ -68,10 +68,21 @@ flowchart TB
     Pages -- "OAuth redirect" --> Google
     Pages -- "checkbox challenge" --> ReCaptcha
 
-    style App fill:#103d28,color:#fff,stroke:#1a5c3d
-    style DB fill:#e6f0ea,stroke:#1a5c3d
-    style FBR fill:#b98a2f,color:#fff
+    classDef client fill:#3b3f8f,stroke:#22265c,color:#ffffff
+    classDef appNode fill:#1a5c3d,stroke:#0d2e1c,color:#ffffff
+    classDef data fill:#0f6a6a,stroke:#083f3f,color:#ffffff
+    classDef external fill:#a15c00,stroke:#5c3400,color:#ffffff
+
+    class Browser client
+    class MW,Pages,API,Lib appNode
+    class DB data
+    class FBR,Resend,Google,ReCaptcha external
+
+    style Client fill:#f4f5f1,stroke:#9aa39c,color:#22262e
+    style App fill:#f4f5f1,stroke:#9aa39c,color:#22262e
 ```
+
+<sub>🟪 Client-side · 🟩 App internals (Next.js) · 🟦 Data store · 🟧 External third-party services</sub>
 
 ### Layered request flow
 
@@ -83,10 +94,10 @@ flowchart LR
     B --> C["3 · Execute<br/>Mongoose model ops"]
     C --> D["4 · Audit<br/>logAudit() (fire-and-forget)"]
 
-    style A fill:#e6f0ea,stroke:#1a5c3d
-    style B fill:#e6f0ea,stroke:#1a5c3d
-    style C fill:#e6f0ea,stroke:#1a5c3d
-    style D fill:#e6f0ea,stroke:#1a5c3d
+    style A fill:#3b3f8f,stroke:#22265c,color:#ffffff
+    style B fill:#1a5c3d,stroke:#0d2e1c,color:#ffffff
+    style C fill:#0f6a6a,stroke:#083f3f,color:#ffffff
+    style D fill:#a15c00,stroke:#5c3400,color:#ffffff
 ```
 
 No route trusts a client-supplied `firmId` or `clientId` — every query is pre-scoped server-side from the signed session before it ever touches the database.
